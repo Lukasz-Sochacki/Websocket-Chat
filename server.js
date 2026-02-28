@@ -22,13 +22,22 @@ io.on('connection', (socket) => {
   socket.on('join', (login) => {
     users.push({ name: login, id: socket.id });
     console.log('User has beed added: ' + login + ' ' + socket.id);
+    socket.broadcast.emit('newUser', {
+      author: 'Chat Bot',
+      content: `${login} has joined the conversation!`,
+    });
   });
 
   socket.on('disconnect', () => {
     const index = users.findIndex((user) => user.id === socket.id);
     if (index !== -1) {
-      console.log(`User ${users[index].name} has left!`);
+      const user = users[index];
       users.splice(index, 1);
+      console.log(`User ${user.name} has left!`);
+      socket.broadcast.emit('removeUser', {
+        author: 'Chat Bot',
+        content: `${user.name} has left the conversation... :(`,
+      });
     }
   });
   console.log("I've added a listener on message event \n");

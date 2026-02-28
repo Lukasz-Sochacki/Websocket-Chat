@@ -108,6 +108,11 @@ p {
   display: block;
 }
 
+.botMessage {
+  font-style: italic;
+  color: black;
+}
+
 @-webkit-keyframes fadeIn {
   from {
     opacity: 0;

@@ -28,6 +28,10 @@ const addMessage = (author, content) => {
   if (author === userName) {
     message.classList.add('message--self');
   }
+
+  if (author === 'Chat Bot') {
+    message.classList.add('botMessage');
+  }
   message.innerHTML = `
     <h3 class="message__author">${userName === author ? 'You' : author}</h3>
     <div class="message__content">
@@ -52,6 +56,8 @@ const sendMessage = (event) => {
 };
 
 socket.on('message', ({ author, content }) => addMessage(author, content));
+socket.on('newUser', ({ author, content }) => addMessage(author, content));
+socket.on('removeUser', ({ author, content }) => addMessage(author, content));
 
 loginForm.addEventListener('submit', login);
 addMessageForm.addEventListener('submit', sendMessage);
