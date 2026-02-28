@@ -9,13 +9,40 @@ let userName = '';
 
 const login = (event) => {
   event.preventDefault();
-  if (!userNameInput.value) {
-    alert('Field cannot be empty!');
-  } else {
+  if (userNameInput.value) {
     userName = userNameInput.value;
     loginForm.classList.remove('show');
     messagesSection.classList.add('show');
+  } else {
+    alert('Field cannot be empty!');
   }
 };
 
+const addMessage = (author, content) => {
+  const message = document.createElement('li');
+  message.classList.add('message', 'message--received');
+
+  if (author === userName) {
+    message.classList.add('message--self');
+  }
+  message.innerHTML = `
+    <h3 class="message__author">${userName === author ? 'You' : author}</h3>
+    <div class="message__content">
+    ${content}
+    </div>
+    `;
+  messagesList.appendChild(message);
+};
+
+const sendMessage = (event) => {
+  event.preventDefault();
+  if (messageContentInput.value) {
+    addMessage(userName, messageContentInput.value);
+  } else {
+    alert('Field cannot be empty!');
+  }
+  messageContentInput.value = '';
+};
+
 loginForm.addEventListener('submit', login);
+addMessageForm.addEventListener('submit', sendMessage);
