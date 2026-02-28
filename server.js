@@ -12,13 +12,24 @@ const io = socket(server);
 
 io.on('connection', (socket) => {
   console.log('New Client! Its id - ' + socket.id);
+
   socket.on('message', (message) => {
     console.log("Oh, I've got something from " + socket.id);
     messages.push(message);
     socket.broadcast.emit('message', message);
   });
+
+  socket.on('join', (login) => {
+    users.push({ name: login, id: socket.id });
+    console.log('User has beed added: ' + login + ' ' + socket.id);
+  });
+
   socket.on('disconnect', () => {
-    console.log('Oh, socket ' + socket.id + ' has left');
+    const index = users.findIndex((user) => user.id === socket.id);
+    if (index !== -1) {
+      console.log(`User ${users[index].name} has left!`);
+      users.splice(index, 1);
+    }
   });
   console.log("I've added a listener on message event \n");
 });
@@ -30,3 +41,4 @@ app.get('/', (req, res) => {
 });
 
 const messages = [];
+const users = [];
